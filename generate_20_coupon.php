@@ -2,7 +2,21 @@
 // Generate 20% coupon for active BP's
 require('wp-load.php');
 
-function radical_generate_new_bp_customer20_coupon() {
+// 230948 - make function name unique
+function radical230948_add_affiliate_note( $user_id = false, $note_type = false, $note_content = false ) {
+  if (!$user_id || !$note_type || !$note_content) {
+    return false;
+  }
+  $data = array(
+    'user_id' => $user_id,
+    'type' => $note_type,
+    'content' => $note_content
+  );
+  global $wpdb;
+  return $wpdb->insert( $wpdb->prefix . 'vitalibis_affiliatenotes', $data );
+}
+
+function radical230948_generate_new_bp_customer20_coupon() {
     $site_url = get_site_url();
     $number = isset($_GET['number']) ? $_GET['number'] : 10;
     $offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
@@ -27,6 +41,7 @@ function radical_generate_new_bp_customer20_coupon() {
       return;
     }
     $coupon_amount = 20;
+    // $coupon_amount = 23; // testing
     $discount_type = 'percent_andor_recurring_percent';
     if ($users) {
       echo '<p>Coupons created:</p><ul>';
@@ -58,9 +73,11 @@ function radical_generate_new_bp_customer20_coupon() {
               - <a href="' . $site_url . '/wp-admin/admin.php?page=gigfilliate&tab=affiliates&affiliate_id=' . $affiliate_id . '&action=edit&action=edit" target="_blank">Affiliate ID: ' . $affiliate_id . '</a>
               - <a href="' . $site_url . '/wp-admin/post.php?post=' . $new_coupon_id . '&action=edit" target="_blank">New Coupon: ' . $coupon_code . '</a>
             </li>';
+          radical230948_add_affiliate_note($user->ID, 'activity', 'Congratulations a new customer 20% OFF coupon has been created: ' . $coupon_code);
         }
       echo '</ul>';
     }
     echo 'Done';
 }
-radical_generate_new_bp_customer20_coupon();
+
+radical230948_generate_new_bp_customer20_coupon();
