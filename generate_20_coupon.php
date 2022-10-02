@@ -4,8 +4,8 @@ require('wp-load.php');
 
 function radical_generate_new_bp_customer20_coupon() {
     $site_url = get_site_url();
-    $number = $_GET['number'];
-    $offset = $_GET['offset'];
+    $number = isset($_GET['number']) ? $_GET['number'] : 10;
+    $offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
     if (!$number) {
       echo 'Please enter number!';
       return;
@@ -14,6 +14,7 @@ function radical_generate_new_bp_customer20_coupon() {
       $offset = 0;
     }
     $user_query = new WP_User_Query([
+      // 'include' => [4221], // testing
       'meta_key'     => 'v_affiliate_status',
       'meta_value'   => 'active',
       'meta_compare' => '==',
@@ -21,14 +22,14 @@ function radical_generate_new_bp_customer20_coupon() {
       'offset' => $offset
     ]);
     $users = $user_query->get_results();
-    if ($_GET['dry_run']) {
+    if (isset($_GET['dry_run']) && $_GET['dry_run']) {
       echo 'Dry run<br/>Number of users:' . count($users);
       return;
     }
     $coupon_amount = 20;
     $discount_type = 'percent_andor_recurring_percent';
     if ($users) {
-      echo '<ul>';
+      echo '<p>Coupons created:</p><ul>';
         foreach ($users as $user) {
           $coupon_code = get_user_meta($user->ID, 'nickname', true) . $coupon_amount; 
           $coupon = array(
