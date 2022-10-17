@@ -14,7 +14,8 @@ function updateGigfilliateWPCustomersOrderedByMetaKey() {
     'meta_value' => '',
     'meta_compare' => 'EXISTS'
   ]);
-  echo 'Total orders count: ' . count($orders) . '<br/><ul>';
+  // wp_count_posts() // Get Total orders
+  echo 'Found orders count: ' . count($orders) . '<br/><ul>';
     for ($i = 0; $i < count($orders); $i++) { 
       $ordered_by = get_post_meta($orders[$i]->ID, 'ordered_by', true) . '<br>';
       $result = update_post_meta($orders[$i]->ID, 'gigfilliatewp_ordered_by', $ordered_by);
