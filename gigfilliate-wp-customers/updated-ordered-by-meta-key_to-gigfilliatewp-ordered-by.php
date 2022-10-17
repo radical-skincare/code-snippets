@@ -3,9 +3,12 @@
 require('../wp-load.php');
 
 function updateGigfilliateWPCustomersOrderedByMetaKey() {
+  $posts_per_page = isset($_GET['posts_per_page']) ? $_GET['posts_per_page'] : 10;
+  $offset = isset($_GET['offset']) ? $_GET['offset'] : 0;  
   $orders = get_posts([
     'post_type' => 'shop_order',
-    'limit' => -1,
+    'posts_per_page' => $posts_per_page,
+    'offset' => $offset,
     'post_status' => 'any',
     'meta_key' => 'ordered_by',
     'meta_value' => '',
