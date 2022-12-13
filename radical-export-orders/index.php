@@ -1,5 +1,13 @@
 <?php
 require('../wp-load.php');
+function array_to_csv_download($array, $filename = "export.csv", $delimiter=";") {
+  header('Content-Type: application/csv');
+  header('Content-Disposition: attachment; filename="'.$filename.'";');
+  $f = fopen('php://output', 'w');
+  foreach ($array as $line) {
+    fputcsv($f, $line, $delimiter);
+  }
+}
 function generate_orders_csv(){
   if (!isset($_GET['start'])) {
     echo 'Please Enter Start Date';
@@ -33,13 +41,6 @@ function generate_orders_csv(){
       $order->get_total()
     ];
   }
-  
-  echo "File Name: <b>radical-orders_$initial_date-$final_date.csv</b> <br>";
-  $fp = fopen("radical-orders_$initial_date-$final_date.csv", 'w');
-  foreach ($csv as $fields) {
-    fputcsv($fp, $fields);
-  }
-  fclose($fp);
-  echo 'Generated';
+  return array_to_csv_download($csv, "radical-orders_$initial_date-$final_date.csv", ',');
 }
 generate_orders_csv();
