@@ -10,22 +10,22 @@ const Checkout  = {
   // currentScreenActivePrimaryBtnOriginalText: '',
   onInit: function() {
     // if (Cookie.read('Brand_Partner_Address')) {
-    //   Cookie.erase('Brand_Partner_Address')
+    //   Cookie.erase('Brand_Partner_Address');
     // }
-    Checkout.showSummary()
-    Checkout.init()
+    Checkout.showSummary();
+    Checkout.init();
     setTimeout(function() {
       if ($('select#billing_country').length) {
-        Checkout.checkCartItems( $('select#billing_country'), 'Billing' )
+        Checkout.checkCartItems( $('select#billing_country'), 'Billing' );
       } else if ($('select#shipping_country').length) {
-        Checkout.checkCartItems( $('select#shipping_country'), 'Shipping' )
+        Checkout.checkCartItems( $('select#shipping_country'), 'Shipping' );
       }
       // Checkout.cyberMondayNotice()
-    }, 1500)
-    Checkout.onCFW()
+    }, 1500);
+    Checkout.onCFW();
   },
   cyberMondayNotice: function() {
-    jQuery('#cfw-cart').before('<div class="checkoutwc-black-friday" style="background-color: #b21837; color: white; padding: 1rem; text-align: center; margin-bottom: 1rem;">Cyber Monday Sale 20% OFF everything! <br/>Sale Ends 11.30 <br/><small>Discount already automatically applied, <br>except to excluded items.</small></div>')
+    jQuery('#cfw-cart').before('<div class="checkoutwc-black-friday" style="background-color: #b21837; color: white; padding: 1rem; text-align: center; margin-bottom: 1rem;">Cyber Monday Sale 20% OFF everything! <br>Sale Ends 11.30 <br><small>Discount already automatically applied, <br>except to excluded items.</small></div>')
   },
   showSummary: function() {
     if ( $(window).width() <= 991 ) {
@@ -34,9 +34,9 @@ const Checkout  = {
     }
   },
   init: function() {
-    setTimeout(function() {
-      Checkout.hideSavedPaymentOptions();
-    }, 250);
+    // setTimeout(function() {
+    //   Checkout.hideSavedPaymentOptions();
+    // }, 250);
     if ( $('#checkout').hasClass('wc-custom-init') ) {
       return;
     }
@@ -53,7 +53,7 @@ const Checkout  = {
 	  }, 1000);
 	
     // hide saved payment options
-    $('#checkout').addClass('wc-custom-init');
+    // $('#checkout').addClass('wc-custom-init');
   },
   onCFW: function() {
     $(document.body).on( 'cfw_updated_checkout', function() {
@@ -141,11 +141,12 @@ const Checkout  = {
     } else {
       invalid_products = []
     }
-    if (invalid_products.length >= 1) {
-      Checkout.$currentScreenActivePrimaryBtn.attr('disabled', true).text('Either remove ('+(invalid_products.join(','))+') from your cart or change your "' + type + ' Country. Because these products are only available in US."').css('background-color', 'gray').css('cursor', 'default');
-    } else {
-      Checkout.$currentScreenActivePrimaryBtn.attr('disabled', false).removeAttr('disabled').text('Continue').css('background-color', '#b20839').css('cursor', 'pointer');
-    }
+	if (invalid_products.length >= 1) {
+		Checkout.$currentScreenActivePrimaryBtn.attr('disabled', true).text('Either remove ('+(invalid_products.join(','))+') from your cart or change your "' + type + ' Country. Because these products are only available in US."').css('background-color', 'gray').css('cursor', 'default');
+	} else {
+    Checkout.$currentScreenActivePrimaryBtn.attr('disabled', false).removeAttr('disabled').text('Continue').css('background-color', '#b20839').css('cursor', 'pointer');
+  }
+
     if (disable_next_step) {
       if ( !$('#checkout').hasClass('already-shown-cbd-alert') ) {
         alert('One of product(s) in your cart is only available in United States, United Kingdom and Canada. Please either remove the CBD products from your cart or change your "' + type + ' Country".');
