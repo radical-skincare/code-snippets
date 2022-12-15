@@ -1,0 +1,97 @@
+/*
+ * Hide Saved Payment
+ *
+ label.sv-wc-payment-gateway-payment-form-saved-payment-method {
+  display: none !important;
+}
+.js-sv-wc-payment-gateway-payment-token {
+  display: none !important;
+}
+.woocommerce-checkout #payment div.payment_box .sv-wc-payment-gateway-payment-form-manage-payment-methods {
+  display: none !important;
+}
+ */
+select.cfw-cart-quantity-input {
+  background: white;
+}
+/*
+#cfw-breadcrumb li.filled-circle:first-child {
+  display: none !important;
+}
+*/
+#cfw-breadcrumb:after {
+  background: #666 !important;
+}
+#cfw-breadcrumb li > a {
+  color: #666 !important;
+}
+#cfw-breadcrumb .filled-circle:before {
+  background: #666 !important;
+}
+#cfw-breadcrumb li:before {
+  border: 2px solid #666 !important;
+}
+#cfw-logo-container .cfw-logo .logo {
+margin-bottom: 3rem;
+}
+#cfw-breadcrumb .filled-circle:before {
+  background: #b20739;
+}
+#cfw-breadcrumb li:before {
+  border: 2px solid #b20739;
+}
+.cfw-primary-btn {
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+text-transform: uppercase;
+}
+input[type=radio]:checked {
+  box-shadow: inset 0 0 0 10px #b20839;
+}
+a.show-sub-popover.grey-text {
+  color: #666;
+}
+.woocommerce #payment .payment_box.payment_method_afterpay .form-list .form-alt .instalment-info-container .header-text {
+  color: #000;
+}
+#afterpay-checkout-instalment-info-container .instalment-wrapper .instalment .instalment-header-text {
+  color: #000;
+}
+#afterpay-checkout-instalment-info-container .instalment-wrapper .instalment p.instalment-footer-text,
+.woocommerce #payment .payment_box.payment_method_afterpay .form-list .form-alt .footer-text {
+  color: #666;
+}
+input#go-green-opt-out-packaging-checkbox,
+input#drip_woocommerce_accepts_marketing{
+  float: left;
+}
+.drip-lightbox-wrapper {
+  display: none;
+}
+#afterpay-checkout-instalment-info-container .instalment-wrapper .instalment p.instalment-header-text,
+.woocommerce #payment .payment_box.payment_method_afterpay ul.form-list li.form-alt .instalment-info-container p.header-text {
+  color: black;
+}
+
+#cfw-shipping-method-address-review-contact {
+  word-break: break-all;
+}
+a.cfw-primary-btn[disabled] {
+  cursor: default;
+}
+
+#woo-thankyou-affiliate-order-referral {
+    margin-bottom: 1em;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    padding: 1em;
+}
+
+#woo-thankyou-affiliate-order-referral h2 {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+#order_review {
+    padding-bottom: 3rem;
+}
