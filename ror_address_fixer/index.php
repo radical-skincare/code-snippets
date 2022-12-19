@@ -27,6 +27,7 @@ if (isset($_POST['updateAddress']) && isset($_POST['sub_id'])) {
   $update_order->set_shipping_state($_POST['shipping_state']);
   $update_order->set_shipping_postcode($_POST['shipping_postcode']);
   if ($update_order->save()) {
+    update_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by', $_POST['order_by']);
     echo 'Sub #'.$_POST['sub_id']. 'Updated <br>';
   } else {
     echo 'Error!! Unable To Update <br>';
@@ -76,11 +77,11 @@ function rad_active_subscription_list($user_id = null) {
     'orderby' => 'post_date', // ordered by date
     'order' => 'ASC',
     'meta_query' => array(
-      array(
-        'key' => 'gigfilliatewp_ordered_by',
-        'compare' => 'EXISTS',
-      ),
-      'relation' => 'AND',
+      // array(
+      //   'key' => 'gigfilliatewp_ordered_by',
+      //   'compare' => 'EXISTS',
+      // ),
+      // 'relation' => 'AND',
       array(
         'key' => '_customer_user',
         'compare' => '=',
@@ -161,6 +162,7 @@ function rad_active_subscription_list($user_id = null) {
           <input type='hidden' name='shipping_city' value='".$parent_order->shipping_city."'/>
           <input type='hidden' name='shipping_state' value='".$parent_order->shipping_state."'/>
           <input type='hidden' name='shipping_postcode' value='".$parent_order->shipping_postcode."'/>
+          <input type='hidden' name='order_by' value='".$parent_ordered_by."'/>
           <input type='submit' name='updateAddress' value='Update Address'/>
         </form>
         </td>
