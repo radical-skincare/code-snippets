@@ -32,7 +32,7 @@ if (isset($_POST['updateAddress']) && isset($_POST['sub_id'])) {
     echo 'Error!! Unable To Update <br>';
   }
 }
-function formatted_billing_address($order)
+function rad_formatted_billing_address($order)
 {
   return
     $order->billing_address_1 . ', ' . 
@@ -42,7 +42,7 @@ function formatted_billing_address($order)
     $order->billing_postcode;
 }
 
-function formatted_shipping_address($order)
+function rad_formatted_shipping_address($order)
 {
   return
     $order->shipping_address_1 . ', ' . 
@@ -52,21 +52,21 @@ function formatted_shipping_address($order)
     $order->shipping_postcode;
 }
 
-function formatted_billing_name($order)
+function rad_formatted_billing_name($order)
 {
   return
     $order->billing_first_name . ' ' . 
     $order->billing_last_name;
 }
 
-function formatted_shipping_name($order)
+function rad_formatted_shipping_name($order)
 {
   return
     $order->shipping_first_name . ' ' . 
     $order->shipping_last_name;
 }
 
-function active_subscription_list($from_date=null, $to_date=null) {
+function rad_active_subscription_list($user_id = null) {
   $site_url = get_site_url();
   // Get all customer orders
   $subscriptions = get_posts(array(
@@ -77,12 +77,18 @@ function active_subscription_list($from_date=null, $to_date=null) {
     'order' => 'ASC',
     'meta_query' => array(
       array(
-          'key'     => 'gigfilliatewp_ordered_by',
-          'compare' => 'EXISTS',
+        'key' => 'gigfilliatewp_ordered_by',
+        'compare' => 'EXISTS',
+      ),
+      'relation' => 'AND',
+      array(
+        'key' => '_customer_user',
+        'compare' => '=',
+        'value' => $user_id
       ),
     ),
-  )
-);
+    )
+  );
 
   // Displaying list in an html table
   echo "<table class='shop_table subscription_list'>
@@ -101,20 +107,20 @@ function active_subscription_list($from_date=null, $to_date=null) {
     $parent_id = $subscription->get_parent_id();
     $parent_order = wc_get_order($parent_id);
 
-    $sub_billing_name = formatted_billing_name($subscription);
-    $sub_shipping_name = formatted_shipping_name($subscription);
-    $sub_billing_address = formatted_billing_address($subscription);
-    $sub_shipping_address = formatted_shipping_address($subscription);
+    $sub_billing_name = rad_formatted_billing_name($subscription);
+    $sub_shipping_name = rad_formatted_shipping_name($subscription);
+    $sub_billing_address = rad_formatted_billing_address($subscription);
+    $sub_shipping_address = rad_formatted_shipping_address($subscription);
     $sub_ordered_by = get_post_meta($subscription_id, 'gigfilliatewp_ordered_by', true);
 
-    $parent_billing_name = formatted_billing_name($parent_order);
-    $parent_shipping_name = formatted_shipping_name($parent_order);
-    $parent_billing_address = formatted_billing_address($parent_order);
-    $parent_shipping_address = formatted_shipping_address($parent_order);
+    $parent_billing_name = rad_formatted_billing_name($parent_order);
+    $parent_shipping_name = rad_formatted_shipping_name($parent_order);
+    $parent_billing_address = rad_formatted_billing_address($parent_order);
+    $parent_shipping_address = rad_formatted_shipping_address($parent_order);
     $parent_ordered_by = get_post_meta($parent_id, 'gigfilliatewp_ordered_by', true);
-    if ($sub_billing_address == $parent_billing_address && $sub_shipping_address == $parent_shipping_address) {
-      continue;
-    }
+    // if ($sub_billing_address == $parent_billing_address && $sub_shipping_address == $parent_shipping_address) {
+    //   continue;
+    // }
     echo "
       </tr>
         <td><a href='$site_url/wp-admin/post.php?post=$subscription_id&action=edit' target='_blank'>$subscription_id</a></td>
@@ -163,4 +169,6 @@ function active_subscription_list($from_date=null, $to_date=null) {
   echo '</table>';
 }
 
-active_subscription_list();
+if ($user_id = $_GET['user_id']) {
+  rad_active_subscription_list($user_id);
+}
