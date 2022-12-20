@@ -119,6 +119,7 @@ function rad_active_subscription_list($user_id = null) {
     $parent_billing_address = rad_formatted_billing_address($parent_order);
     $parent_shipping_address = rad_formatted_shipping_address($parent_order);
     $parent_ordered_by = get_post_meta($parent_id, 'gigfilliatewp_ordered_by', true);
+    $_customer_user = get_post_meta($subscription_id, '_customer_user', true);
     // if ($sub_billing_address == $parent_billing_address && $sub_shipping_address == $parent_shipping_address) {
     //   continue;
     // }
@@ -164,8 +165,30 @@ function rad_active_subscription_list($user_id = null) {
           <input type='hidden' name='shipping_postcode' value='".$parent_order->shipping_postcode."'/>
           <input type='hidden' name='order_by' value='".$parent_ordered_by."'/>
           <input type='submit' name='updateAddress' value='Update Address'/>
-        </form>
-        </td>
+        </form>";
+        if (!$parent_ordered_by) {
+          echo "<form method='post'>
+          <input type='hidden' name='sub_id' value='".$subscription_id."'/>
+          <input type='hidden' name='billing_address_1' value='".$parent_order->billing_address_1."'/>
+          <input type='hidden' name='billing_address_2' value='".$parent_order->billing_address_2."'/>
+          <input type='hidden' name='billing_city' value='".$parent_order->billing_city."'/>
+          <input type='hidden' name='billing_state' value='".$parent_order->billing_state."'/>
+          <input type='hidden' name='billing_postcode' value='".$parent_order->billing_postcode."'/>
+          <input type='hidden' name='billing_email' value='".$parent_order->billing_email."'/>
+          <input type='hidden' name='billing_first_name' value='".$parent_order->billing_first_name."'/>
+          <input type='hidden' name='billing_last_name' value='".$parent_order->billing_last_name."'/>
+          <input type='hidden' name='shipping_first_name' value='".$parent_order->shipping_first_name."'/>
+          <input type='hidden' name='shipping_last_name' value='".$parent_order->shipping_last_name."'/>
+          <input type='hidden' name='shipping_address_1' value='".$parent_order->shipping_address_1."'/>
+          <input type='hidden' name='shipping_address_2' value='".$parent_order->shipping_address_2."'/>
+          <input type='hidden' name='shipping_city' value='".$parent_order->shipping_city."'/>
+          <input type='hidden' name='shipping_state' value='".$parent_order->shipping_state."'/>
+          <input type='hidden' name='shipping_postcode' value='".$parent_order->shipping_postcode."'/>
+          <input type='hidden' name='order_by' value='".get_userdata($_customer_user)->user_email."'/>
+          <input type='submit' name='updateAddress' value='Update Address And Order By'/>
+        </form>";
+        }
+        echo "</td>
       </tr>";
   }
   echo '</table>';
