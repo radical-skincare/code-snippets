@@ -73,7 +73,7 @@ function rad_active_subscription_list($user_id = null) {
   $subscriptions = get_posts(array(
     'numberposts' => -1,
     'post_type'   => 'shop_subscription', // Subscription post type
-    'post_status' => 'wc-active', // Active subscription
+    'post_status' => ['wc-active', 'wc-cancelled', 'wc-on-hold'], // Subscription statuses
     'orderby' => 'post_date', // ordered by date
     'order' => 'ASC',
     'meta_query' => array(
@@ -98,6 +98,7 @@ function rad_active_subscription_list($user_id = null) {
           <th>Parent ID</th>
           <th>Subscription</th>
           <th>Parent</th>
+          <th>Subscription Status</th>
           <th>Action</th>
       </tr>
           ";
@@ -105,6 +106,7 @@ function rad_active_subscription_list($user_id = null) {
   foreach ( $subscriptions as $subscription ) {
     $subscription_id = $subscription->ID; // subscription ID
     $subscription = new WC_Subscription( $subscription_id );
+    $status = wcs_get_subscription_status_name( $subscription->get_status() );
     $parent_id = $subscription->get_parent_id();
     $parent_order = wc_get_order($parent_id);
 
@@ -120,9 +122,13 @@ function rad_active_subscription_list($user_id = null) {
     $parent_shipping_address = rad_formatted_shipping_address($parent_order);
     $parent_ordered_by = get_post_meta($parent_id, 'gigfilliatewp_ordered_by', true);
     $_customer_user = get_post_meta($subscription_id, '_customer_user', true);
-    // if ($sub_billing_address == $parent_billing_address && $sub_shipping_address == $parent_shipping_address) {
-    //   continue;
-    // }
+
+    if (isset($_GET['filtered'])) {
+      $customer = new WC_Customer($user_id);
+      if (($customer->get_billing_first_name() .' '.$customer->get_billing_last_name())  == rad_formatted_billing_name($parent_order)) {
+        continue;
+      }
+    }
     echo "
       </tr>
         <td><a href='$site_url/wp-admin/post.php?post=$subscription_id&action=edit' target='_blank'>$subscription_id</a></td>
@@ -144,6 +150,9 @@ function rad_active_subscription_list($user_id = null) {
         <p><b>Name: </b>$parent_shipping_name <br><b>Address: </b>$parent_shipping_address</p>
         <hr>
         <p><b>Orderd By:</b> $parent_ordered_by</p>
+        </td>
+        <td>
+        $status
         </td>
         <td>
         <form method='post'>
