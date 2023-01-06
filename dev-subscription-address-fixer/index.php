@@ -29,10 +29,12 @@ if (isset($_POST['updateAddress']) && isset($_POST['sub_id'])) {
   if ($update_order->save()) {
     $is_order_by_updated = false;
     if (isset($_POST['order_by']) && !empty($_POST['order_by'])) {
-      update_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by', $_POST['order_by']);
-      $is_order_by_updated = true;
+      delete_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by');
+      if (update_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by', $_POST['order_by'])) {
+        $is_order_by_updated = true;
+      }
     }
-    echo 'Sub #'.$_POST['sub_id']. 'Updated '.($is_order_by_updated?'with':'without').' orderby <br>';
+    echo 'Sub #'.$_POST['sub_id']. ' Updated '.($is_order_by_updated?'with':'without').' orderby <br>';
   } else {
     echo 'Error!! Unable To Update <br>';
   }
