@@ -2,7 +2,7 @@
 
 require('../wp-load.php');
 
-function updateGigfilliateWPCustomersOrderedByMetaKey() {
+function updateGigfiliateWPCustomersOrderedByMetaKey() {
   $posts_per_page = isset($_GET['posts_per_page']) ? $_GET['posts_per_page'] : 10;
   $offset = isset($_GET['offset']) ? $_GET['offset'] : 0;  
   $orders = get_posts([
@@ -18,7 +18,7 @@ function updateGigfilliateWPCustomersOrderedByMetaKey() {
   echo 'Found orders count: ' . count($orders) . '<br/><ul>';
     for ($i = 0; $i < count($orders); $i++) { 
       $ordered_by = get_post_meta($orders[$i]->ID, 'ordered_by', true) . '<br>';
-      $result = update_post_meta($orders[$i]->ID, 'gigfilliatewp_ordered_by', $ordered_by);
+      $result = update_post_meta($orders[$i]->ID, 'gigfiliatewp_ordered_by', $ordered_by);
       echo '<li>';
         if ($result) {
           delete_post_meta($orders[$i]->ID, 'ordered_by');
@@ -31,4 +31,4 @@ function updateGigfilliateWPCustomersOrderedByMetaKey() {
   echo '</ul>';
 }
 
-updateGigfilliateWPCustomersOrderedByMetaKey();
+updateGigfiliateWPCustomersOrderedByMetaKey();

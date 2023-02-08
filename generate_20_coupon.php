@@ -70,7 +70,7 @@ function radical230948_generate_new_bp_customer20_coupon() {
           echo '
             <li>
               <a href="' . $site_url . '/wp-admin/user-edit.php?user_id=' . $user->ID . '&action=edit" target="_blank">User ID: ' . $user->ID . '</a>
-              - <a href="' . $site_url . '/wp-admin/admin.php?page=gigfilliate&tab=affiliates&affiliate_id=' . $affiliate_id . '&action=edit&action=edit" target="_blank">Affiliate ID: ' . $affiliate_id . '</a>
+              - <a href="' . $site_url . '/wp-admin/admin.php?page=gigfiliate&tab=affiliates&affiliate_id=' . $affiliate_id . '&action=edit&action=edit" target="_blank">Affiliate ID: ' . $affiliate_id . '</a>
               - <a href="' . $site_url . '/wp-admin/post.php?post=' . $new_coupon_id . '&action=edit" target="_blank">New Coupon: ' . $coupon_code . '</a>
             </li>';
           radical230948_add_affiliate_note($user->ID, 'activity', 'Congratulations a new customer 20% OFF coupon has been created: ' . $coupon_code);
