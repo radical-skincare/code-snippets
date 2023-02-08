@@ -27,14 +27,8 @@ if (isset($_POST['updateAddress']) && isset($_POST['sub_id'])) {
   $update_order->set_shipping_state($_POST['shipping_state']);
   $update_order->set_shipping_postcode($_POST['shipping_postcode']);
   if ($update_order->save()) {
-    $is_order_by_updated = false;
-    if (isset($_POST['order_by']) && !empty($_POST['order_by'])) {
-      delete_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by');
-      if (update_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by', $_POST['order_by'])) {
-        $is_order_by_updated = true;
-      }
-    }
-    echo 'Sub #'.$_POST['sub_id']. ' Updated '.($is_order_by_updated?'with':'without').' orderby <br>';
+    update_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by', $_POST['order_by']);
+    echo 'Sub #'.$_POST['sub_id']. 'Updated <br>';
   } else {
     echo 'Error!! Unable To Update <br>';
   }
@@ -84,7 +78,7 @@ function rad_active_subscription_list($user_id = null) {
     'order' => 'ASC',
     'meta_query' => array(
       // array(
-      //   'key' => 'gigfilliatewp_ordered_by',
+      //   'key' => 'gigfiliatewp_ordered_by',
       //   'compare' => 'EXISTS',
       // ),
       // 'relation' => 'AND',
@@ -120,13 +114,13 @@ function rad_active_subscription_list($user_id = null) {
     $sub_shipping_name = rad_formatted_shipping_name($subscription);
     $sub_billing_address = rad_formatted_billing_address($subscription);
     $sub_shipping_address = rad_formatted_shipping_address($subscription);
-    $sub_ordered_by = get_post_meta($subscription_id, 'gigfilliatewp_ordered_by', true);
+    $sub_ordered_by = get_post_meta($subscription_id, 'gigfiliatewp_ordered_by', true);
 
     $parent_billing_name = rad_formatted_billing_name($parent_order);
     $parent_shipping_name = rad_formatted_shipping_name($parent_order);
     $parent_billing_address = rad_formatted_billing_address($parent_order);
     $parent_shipping_address = rad_formatted_shipping_address($parent_order);
-    $parent_ordered_by = get_post_meta($parent_id, 'gigfilliatewp_ordered_by', true);
+    $parent_ordered_by = get_post_meta($parent_id, 'gigfiliatewp_ordered_by', true);
     $_customer_user = get_post_meta($subscription_id, '_customer_user', true);
 
     if (isset($_GET['filtered'])) {
