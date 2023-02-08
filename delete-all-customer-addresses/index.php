@@ -1,5 +1,7 @@
 <?php
 
+require('wp-load.php');
+
 function delete_customer_addresses() {
   global $wpdb;
   $usermeta = $wpdb->prefix . "usermeta";
