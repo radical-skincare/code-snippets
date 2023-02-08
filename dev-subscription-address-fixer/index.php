@@ -27,7 +27,7 @@ if (isset($_POST['updateAddress']) && isset($_POST['sub_id'])) {
   $update_order->set_shipping_state($_POST['shipping_state']);
   $update_order->set_shipping_postcode($_POST['shipping_postcode']);
   if ($update_order->save()) {
-    update_post_meta($_POST['sub_id'], 'gigfiliatewp_ordered_by', $_POST['order_by']);
+    update_post_meta($_POST['sub_id'], 'gigfilliatewp_ordered_by', $_POST['order_by']);
     echo 'Sub #'.$_POST['sub_id']. 'Updated <br>';
   } else {
     echo 'Error!! Unable To Update <br>';
