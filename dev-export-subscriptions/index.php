@@ -80,6 +80,9 @@ function generate_subscriptions_csv() {
     $sub_status = $subscription->get_status();
     $total = $subscription->get_total();
     $ordered_by = get_post_meta($subscription_id, 'gigfilliatewp_ordered_by', true);
+    if (!$ordered_by) {
+      $ordered_by = get_post_meta($subscription_id, 'ordered_by', true);
+    }
     $csv[] = [
       // $subscription->get_date_to_display( 'next_payment' ),
       $subscription_id,
