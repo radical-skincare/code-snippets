@@ -1,4 +1,4 @@
 # code-snippets
-Radical Skincare &amp; GigfilliateWP code snippets.
+Radical Skincare &amp; GigfiliateWP code snippets.
 
 ## Estrada Enterprises LLC
