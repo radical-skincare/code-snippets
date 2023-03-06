@@ -1,18 +1,18 @@
 <?php
 require('../wp-load.php');
 
-var_dump(get_the_date('Y-m-d', 22987));
-
-function array_to_csv_download($array, $filename = "export.csv", $delimiter=";") {
+function array_to_csv_download($array, $filename = "export.csv", $delimiter = ";")
+{
   header('Content-Type: application/csv');
-  header('Content-Disposition: attachment; filename="'.$filename.'";');
+  header('Content-Disposition: attachment; filename="' . $filename . '";');
   $f = fopen('php://output', 'w');
   foreach ($array as $line) {
     fputcsv($f, $line, $delimiter);
   }
 }
 
-function generate_orders_csv() {
+function generate_orders_csv()
+{
   if (!isset($_GET['start'])) {
     echo 'Please Enter Start Date';
     return;
@@ -23,54 +23,47 @@ function generate_orders_csv() {
   }
   $start_date_str = $_GET['start'];
   $initial_date = date('Y-m-d', strtotime($start_date_str));
+  $past_10_years_initial_date = date('Y-m-d', strtotime('-10 years', strtotime($initial_date)));
   $final_date = date('Y-m-d', strtotime($_GET['end']));
-  $orders = wc_get_orders(
-    [
-      'limit' => -1,
-      'type' => 'shop_order',
-      'status' => ['wc-processing', 'wc-completed', 'wc-delivered'],
-      'date_created' => $initial_date . '...' . $final_date
-    ]
-  );
+  $order_args = [
+    'limit' => -1,
+    'type' => 'shop_order',
+    'status' => ['wc-processing', 'wc-completed', 'wc-delivered'],
+    'date_created' => $initial_date . '...' . $final_date
+  ];
+  if (isset($_GET['exclude_affiliate']) && $_GET['exclude_affiliate'] == 'true') {
+    $order_args['meta_key'] = 'v_order_affiliate_volume_type';
+    $order_args['meta_compare'] = 'NOT EXISTS';
+  }
+  $orders = wc_get_orders($order_args);
+
   $csv = [];
   $csv[] = ['Is New Customer?', 'Date', 'Order ID', 'Billing Name', 'Billing Email', 'Billing State', 'Billing ZIP', 'Order Total'];
   foreach ($orders as $order) {
     $billing_email = $order->get_billing_email();
-    // echo 'billing email' . $billing_email . '<hr>';
-    $is_new_customer = true;
-    $customer_user = get_user_by('email', $billing_email);
-    if ($customer_user) {
-      // Then lookup if that order email address has been used before
-      $args = [
-        'numberposts' => 1,
-        'meta_key' => '_customer_user',
-        'meta_value' => $customer_user->ID,
-        'post_type' => wc_get_order_types(),
-        'post_status' => array_keys(wc_get_order_statuses()),
-        'date_query' => array(
-          'before' => $start_date_str, // Replace with your desired date
+    $args = array(
+      'post_type' => 'shop_order',
+      'posts_per_page' => 1,
+      'post_status' => array_keys(wc_get_order_statuses()),
+      'orderby' => 'date',
+      'order' => 'DESC',
+      'meta_query' => [
+        [
+          'key' => '_billing_email',
+          'value' => $billing_email,
+          'compare' => '=='
+        ]
+      ],
+      'date_query' => array(
+        array(
+          'after'     => $past_10_years_initial_date,
+          'before'    => $start_date_str,
           'inclusive' => true,
-        ),        
-      ];
-      $orders = get_posts($args);
-      // If customer has ordered before then
-      if ($orders) {
-        $is_new_customer = false;
-      }
-    } else {
-      global $wpdb;
-      $table = $wpdb->prefix . 'postmeta';
-      $sql = "SELECT post_id FROM $table WHERE meta_key = '_billing_email' AND meta_value = '$billing_email' ORDER BY post_id DESC";
-      $post_ids = $wpdb->get_results($sql);
-      foreach ($post_ids as $post_id) {
-        $post_date = get_the_date('Y-m-d', (int)$post_id->post_id);
-        if ($post_date < $start_date_str) {
-          $is_new_customer = false;
-          break;
-        }        
-      }
-    }
-    if ($is_new_customer) {
+        ),
+      ),
+    );
+    $query = new WP_Query($args);
+    if ($query->found_posts == 0) {
       $csv[] = [
         'Yes New Customer',
         $order->get_date_created(),
