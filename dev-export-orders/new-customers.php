@@ -38,7 +38,7 @@ function generate_orders_csv()
   $orders = wc_get_orders($order_args);
 
   $csv = [];
-  $csv[] = ['Is New Customer?', 'Date', 'Order ID', 'Billing Name', 'Billing Email', 'Billing State', 'Billing ZIP', 'Order Total'];
+  $csv[] = ['Is New Customer?', 'Date', 'Order ID', 'Billing Name', 'Billing Email', 'Billing State', 'Billing ZIP', 'Order Total', 'Affiliate ID', 'Affiliate Volume'];
   foreach ($orders as $order) {
     $billing_email = $order->get_billing_email();
     $args = array(
@@ -64,6 +64,7 @@ function generate_orders_csv()
     );
     $query = new WP_Query($args);
     if ($query->found_posts == 0) {
+      $order_id = $order->get_id();
       $csv[] = [
         'Yes New Customer',
         $order->get_date_created(),
@@ -72,7 +73,9 @@ function generate_orders_csv()
         $order->get_billing_email(),
         $order->get_billing_state(),
         $order->get_billing_postcode(),
-        $order->get_total()
+        $order->get_total(),
+        get_post_meta($order_id, 'v_order_affiliate_id', true),
+        get_post_meta($order_id, 'v_order_affiliate_volume_type', true)
       ];
     }
   }
