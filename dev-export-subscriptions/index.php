@@ -2,10 +2,19 @@
 
 require('../wp-load.php');
 
+function uniq28323_formatted_billing_address($obj) {
+  $address = $obj->get_billing_address_1() . ' ';
+  if ($obj->get_billing_address_2()) {
+    $address .= $obj->get_billing_address_2() . ' ';    
+  }
+  $address .= $obj->get_billing_city() . ', ' . $obj->get_billing_state() . ' ' . $obj->get_billing_postcode();
+  return $address;
+}
+
 /*
  * Convert Number to Word
  */
-function get_subscription_interval_period_text($subscription = false) {
+function uniq28323_get_subscription_interval_period_text($subscription = false) {
   if (!$subscription) {
       return '';
   }
@@ -19,7 +28,7 @@ function get_subscription_interval_period_text($subscription = false) {
   return $interval . ' ' . $period;
 }
 
-function array_to_csv_download($array, $filename = "export.csv", $delimiter=";") {
+function uniq28323_array_to_csv_download($array, $filename = "export.csv", $delimiter=";") {
   header('Content-Type: application/csv');
   header('Content-Disposition: attachment; filename="'.$filename.'";');
   $f = fopen('php://output', 'w');
@@ -28,7 +37,7 @@ function array_to_csv_download($array, $filename = "export.csv", $delimiter=";")
   }
 }
 
-function generate_subscriptions_csv() {
+function uniq28323_generate_subscriptions_csv() {
   if (!isset($_GET['limit'])) {
     echo 'Please Enter Limit';
     return;
@@ -68,33 +77,38 @@ function generate_subscriptions_csv() {
     // 'date_created' => $initial_date . '...' . $final_date
   ];
   $subscriptions = wc_get_orders($args);
-  // var_dump('args', $args);
   $csv = [];
-  // $csv[] = ['Date', 'Order ID', 'Billing Name', 'Billing Email', 'Billing State', 'Billing ZIP', 'Order Total'];
   $csv[] = [
     // 'Next Payment Date',
-    'Subscription ID', 'Status', 'Billing Name', 'Billing Email', 'Ordered By', 'Recurring Total', 'Interval'];
+    'Subscription ID', 'Status', 'Billing Name', 'Billing Email', 'Billing Full Address', 'Ordered By', 'Most Recent Order Affiliate Volume Type', 'Recurring Total', 'Interval'];
   // $woocommerce_currency_symbol = get_woocommerce_currency_symbol();
   foreach ($subscriptions as $subscription) {
     $subscription_id = $subscription->get_ID();
     $sub_status = $subscription->get_status();
     $total = $subscription->get_total();
     $ordered_by = get_post_meta($subscription_id, 'gigfilliatewp_ordered_by', true);
-    if (!$ordered_by) {
-      $ordered_by = get_post_meta($subscription_id, 'ordered_by', true);
-    }
+    $related_orders = $subscription->get_related_orders();
+    $order_affiliate_volume_type = '';
+    if ($related_orders) {
+      foreach ($related_orders as $related_order_id) {
+        $order_affiliate_volume_type = get_post_meta($related_order_id, 'v_order_affiliate_volume_type', true);
+        break;
+      }      
+    }    
     $csv[] = [
       // $subscription->get_date_to_display( 'next_payment' ),
       $subscription_id,
       $sub_status,
       $subscription->get_billing_first_name() . ' '. $subscription->get_billing_last_name(),
       $subscription->get_billing_email(),
+      uniq28323_formatted_billing_address($subscription),
       $ordered_by,
+      $order_affiliate_volume_type,
       '$' . $total,
-      get_subscription_interval_period_text($subscription),
+      uniq28323_get_subscription_interval_period_text($subscription),
     ];
   }
-  return array_to_csv_download($csv, "radical-subscriptions_active.csv", ',');
+  return uniq28323_array_to_csv_download($csv, "radical-subscriptions_active.csv", ',');
 }
 
-generate_subscriptions_csv();
+uniq28323_generate_subscriptions_csv();
