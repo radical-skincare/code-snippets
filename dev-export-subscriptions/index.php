@@ -86,7 +86,8 @@ function uniq28323_generate_subscriptions_csv() {
     $subscription_id = $subscription->get_ID();
     $sub_status = $subscription->get_status();
     $total = $subscription->get_total();
-    $ordered_by = get_post_meta($subscription_id, 'gigfilliatewp_ordered_by', true);
+    $ordered_by = get_post_meta($subscription_id, 'gig_ordered_by', true);
+    // $ordered_by = get_post_meta($subscription_id, 'gigfilliatewp_ordered_by', true);
     $related_orders = $subscription->get_related_orders();
     $order_affiliate_volume_type = '';
     if ($related_orders) {
