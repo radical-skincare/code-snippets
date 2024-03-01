@@ -39,6 +39,7 @@ function radical_generate_orders_csv() {
     $has_hydrating_cleanser = false;
     foreach ($order->get_items() as $item_id => $item) {
       $product = $item->get_product();
+      // $post_id = $product->get_id();
       $slug = $product->get_slug();
       if ($slug === 'hydrating-cleanser') {
         $has_hydrating_cleanser = true;
@@ -48,7 +49,6 @@ function radical_generate_orders_csv() {
     if (!$has_hydrating_cleanser) {
       continue;
     }
-    $post_id = $product->get_id();
     $order_id = $order->get_id();
     $sub_relationship = '';
     if ($wc_subscriptions_exists) {
@@ -68,8 +68,8 @@ function radical_generate_orders_csv() {
       $order->get_billing_state(),
       $order->get_billing_postcode(),
       $order->get_total(),
-      get_post_meta($post_id, 'v_order_affiliate_id', true),
-      get_post_meta($post_id, 'v_order_affiliate_volume_type', true),
+      get_post_meta($order_id, 'v_order_affiliate_id', true),
+      get_post_meta($order_id, 'v_order_affiliate_volume_type', true),
       $sub_relationship
     ];
   }
