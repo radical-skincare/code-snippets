@@ -33,7 +33,8 @@ function radical_generate_orders_csv() {
     ]
   );
   $csv = [];
-  $csv[] = ['Date', 'Order ID', 'Billing Name', 'Billing Email', 'Billing State', 'Billing ZIP', 'Order Total'];
+  $csv[] = ['Date', 'Order ID', 'Billing Name', 'Billing Email', 'Billing State', 'Billing ZIP', 'Order Total', 'Brand Partner ID', 'Brand Partner Volume Type', 'Subscription Relationship'];
+  $wc_subscriptions_exists = class_exists('WC_Subscriptions');
   foreach ($orders as $order) {
     $has_hydrating_cleanser = false;
     foreach ($order->get_items() as $item_id => $item) {
@@ -47,6 +48,17 @@ function radical_generate_orders_csv() {
     if (!$has_hydrating_cleanser) {
       continue;
     }
+    $post_id = $product->get_id();
+    $sub_relationship = '';
+    if ($wc_subscriptions_exists) {
+      if (wcs_order_contains_subscription( $order['id'], 'renewal')) {
+        $sub_relationship = 'Renewal Order';
+      } elseif (wcs_order_contains_subscription( $order['id'], 'resubscribe')) {
+        $sub_relationship = 'Resubscribe Order';
+      } elseif (wcs_order_contains_subscription( $order['id'], 'parent')) {
+        $sub_relationship = 'Parent Order';
+      }
+    }
     $csv[] = [
       $order->get_date_created(),
       $order->get_id(),
@@ -54,7 +66,10 @@ function radical_generate_orders_csv() {
       $order->get_billing_email(),
       $order->get_billing_state(),
       $order->get_billing_postcode(),
-      $order->get_total()
+      $order->get_total(),
+      get_post_meta($post_id, 'v_order_affiliate_id', true),
+      get_post_meta($post_id, 'v_order_affiliate_volume_type', true),
+      $sub_relationship
     ];
   }
   return radical_array_to_csv_download($csv, "radical-orders_hydrating-cleanser_$initial_date-$final_date.csv", ',');
