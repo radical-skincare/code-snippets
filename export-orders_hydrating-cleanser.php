@@ -49,13 +49,14 @@ function radical_generate_orders_csv() {
       continue;
     }
     $post_id = $product->get_id();
+    $order_id = $order->get_id();
     $sub_relationship = '';
     if ($wc_subscriptions_exists) {
-      if (wcs_order_contains_subscription( $order['id'], 'renewal')) {
+      if (wcs_order_contains_subscription($order_id, 'renewal')) {
         $sub_relationship = 'Renewal Order';
-      } elseif (wcs_order_contains_subscription( $order['id'], 'resubscribe')) {
+      } elseif (wcs_order_contains_subscription($order_id, 'resubscribe')) {
         $sub_relationship = 'Resubscribe Order';
-      } elseif (wcs_order_contains_subscription( $order['id'], 'parent')) {
+      } elseif (wcs_order_contains_subscription($order_id, 'parent')) {
         $sub_relationship = 'Parent Order';
       }
     }
