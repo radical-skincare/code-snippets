@@ -62,7 +62,7 @@ function radical_generate_orders_csv() {
     }
     $csv[] = [
       $order->get_date_created(),
-      $order->get_id(),
+      $order_id,
       $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
       $order->get_billing_email(),
       $order->get_billing_state(),
