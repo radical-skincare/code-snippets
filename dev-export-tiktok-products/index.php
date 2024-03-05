@@ -48,7 +48,7 @@ function radical_export_tittok_products() {
     $product_gallery_iamges = $product->get_gallery_image_ids();
     $csv[] = [
       implode(', ', $categories), // Category
-      '', // Brand
+      'Radical Skincare', // Brand
       $product->get_name(), // Product Name
       $product->get_short_description(), // Product Description
       $product->get_weight(), // Package Weight(lb)
@@ -77,7 +77,7 @@ function radical_export_tittok_products() {
       // TODO...
       $product->get_meta('size_chart'), // Size Chart
       $product->get_meta('skin_type'), // Skin Type
-      '', // Country Of Origin
+      'USA', // Country Of Origin
       $product->get_meta('shelf_life'), // Shelf Life
       $product->get_meta('alcohol_or_aerosol'), // Alcohol Or Aerosol
       $product->get_meta('allergen_information'), // Allergen Information
