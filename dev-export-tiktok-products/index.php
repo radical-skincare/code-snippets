@@ -1,5 +1,4 @@
 <?php
-<?php
 require('./wp-load.php');
 
 function radical_array_to_csv_download($array, $filename = "export.csv", $delimiter=";") {
