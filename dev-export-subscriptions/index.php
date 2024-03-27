@@ -109,7 +109,9 @@ function uniq28323_generate_subscriptions_csv() {
       uniq28323_get_subscription_interval_period_text($subscription),
     ];
   }
-  return uniq28323_array_to_csv_download($csv, "radical-subscriptions_active.csv", ',');
+  $site_name = 'radical';
+  $today = date('Y-m-d');
+  return uniq28323_array_to_csv_download($csv, "$site_name-subscriptions_$status_$today.csv", ',');
 }
 
 uniq28323_generate_subscriptions_csv();
